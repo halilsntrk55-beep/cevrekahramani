@@ -28,7 +28,7 @@ function cityProgress(){return Math.round((state.built.length+(state.energy?1:0)
 function tone(good=true){if(muted)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();audio.resume();let o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.frequency.setValueAtTime(good?540:170,audio.currentTime);o.frequency.exponentialRampToValueAtTime(good?900:120,audio.currentTime+.15);g.gain.setValueAtTime(.08,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.25);o.start();o.stop(audio.currentTime+.26)}catch{}}
 function message(title,body){clearTimeout(messageTimer);$('message').replaceChildren();let strong=document.createElement('strong'),p=document.createElement('p');strong.textContent=title;p.textContent=body;$('message').append(strong,p);$('message').classList.remove('hidden');messageTimer=setTimeout(()=>$('message').classList.add('hidden'),3500)}
 function tip(text){clearTimeout(tipTimer);$('tip').textContent=text;$('tip').classList.remove('hidden');tipTimer=setTimeout(()=>$('tip').classList.add('hidden'),4500)}
-function hud(){$('score').textContent=state.score;$('budget').textContent=state.budget;$('cleanliness').textContent='%'+cleanliness();$('time').textContent=String(Math.floor(state.remaining/60)).padStart(2,'0')+':'+String(state.remaining%60).padStart(2,'0');$('time').style.color=state.remaining<30?'#bd342d':'';$('legend').textContent=cleanliness()<20?'Kirli mahalle → evleri temizleyerek dönüşümü başlat.':`Mahalle %${cleanliness()} temiz · ${state.complete.length}/5 yeşil bahçe · ${state.built.length}/3 şehir yatırımı`}
+function hud(){$('score').textContent=state.score;$('budget').textContent=state.budget;$('cleanliness').textContent='%'+cleanliness();$('time').textContent=String(Math.floor(state.remaining/60)).padStart(2,'0')+':'+String(state.remaining%60).padStart(2,'0');$('time').style.color=state.remaining<30?'#bd342d':'';$('legend').textContent=cleanliness()<20?'Kirli mahalle → evleri temizleyerek dönüşümü başlat.':`Mahalle %${cleanliness()} temiz · ${state.complete.length}/3 yeşil bahçe · ${state.built.length}/3 şehir yatırımı`}
 function selectableHome(i){return i<=state.complete.length&&i<3&&!state.complete.includes(i)}
 function selectHome(i){if(!state.running||state.paused)return;if(state.complete.includes(i)){tip(homes[i].name+' temizlendi! '+homes[i].fact);return}if(!selectableHome(i)){tip('Önce '+(state.complete.length+1)+'. evi temizle; sonra bu ev açılacak.');return}state.home=i;state.phase='house';state.sorted[i]=state.sorted[i]||[];selected=null;render();tone()}
 function nextHome(){state.phase='map';state.home=-1;selected=null;render()}
@@ -89,6 +89,7 @@ let trafficTime=0,trafficLast=performance.now();
 const labelUpdate=updateMarkers;updateMarkers=function(){labelUpdate();markerButtons.forEach((b,i)=>{if(state.complete.includes(i)){let label='✓ '+(i+1)+'. Ev · TEMİZ';if(b.textContent!==label)b.textContent=label;b.setAttribute('aria-label',(i+1)+'. ev '+homes[i].name+' temizlendi')}})};
 
 </script></body></html>
+
 
 
 
